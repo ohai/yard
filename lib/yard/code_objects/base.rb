@@ -378,14 +378,8 @@ module YARD
           return @docstring
         end
 
-        if locale.is_a?(String)
-          locale_name = locale
-          locale = nil
-        else
-          locale_name = locale.name
-        end
-        @docstrings[locale_name] ||=
-          translate_docstring(locale || Registry.locale(locale_name))
+        locale_name, locale = I18n::Locale.normalize(locale)
+        @docstrings[locale_name] ||= translate_docstring(locale)
       end
 
       # Attaches a docstring to a code object by parsing the comments attached to the statement

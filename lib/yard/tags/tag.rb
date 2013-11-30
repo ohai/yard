@@ -13,10 +13,6 @@ module YARD
       # @return [String] the name of the tag
       attr_accessor :tag_name
 
-      # @return [String] the tag text associated with the tag
-      # @return [nil] if no tag text is supplied
-      attr_accessor :text
-
       # @return [Array<String>] a list of types associated with the tag
       # @return [nil] if no types are associated with the tag
       attr_accessor :types
@@ -42,6 +38,7 @@ module YARD
       # @param [String] name           optional key name which the tag refers to
       def initialize(tag_name, text, types = nil, name = nil)
         @tag_name, @text, @name, @types = tag_name.to_s, text, name, (types ? [types].flatten.compact : nil)
+        @texts = Hash.new
       end
 
       # Convenience method to access the first type specified. This should mainly
@@ -52,6 +49,24 @@ module YARD
       def type
         types.first
       end
+
+      # @return [String] the tag text associated with the tag
+      # @return [nil] if no tag text is supplied
+      def text(locale = I18n::Locale.default)
+        return @text if locale.nil?
+
+        locale_name, locale = I18n::Locale.normalize(locale)
+        @texts[locale_name] ||= translated_text(locale)
+      end
+
+      private
+      
+      def translated_text(locale)
+        return @text if locale.nil?
+        return nil if @text.nil?
+        I18n::Text.new(@text).translate(locale)
+      end
     end
   end
 end
+
