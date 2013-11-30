@@ -78,4 +78,21 @@ eop
       @locale.translate("nonexistent") == "nonexistent"
     end
   end
+
+  describe ".normalize" do
+    it "should return locale string and locale object for locale string" do
+      locale_name, locale = YARD::I18n::Locale.normalize("fr")
+      locale_name.should == "fr"
+      locale.name.should == "fr"
+    end
+
+    it "should return [nil, nil] for nil" do
+      YARD::I18n::Locale.normalize(nil).should == [nil, nil]
+    end
+
+    it "should return locale string and locale itself for locale object" do
+      locale = YARD::I18n::Locale.new("fr")
+      YARD::I18n::Locale.normalize(locale).should == ["fr", locale]
+    end
+  end
 end

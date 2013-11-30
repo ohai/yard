@@ -19,6 +19,16 @@ module YARD
         def default=(locale)
           @@default = locale
         end
+
+        def normalize(locale)
+          return nil, nil if locale.nil?
+          
+          if locale.is_a?(String)
+            return locale, Registry.locale(locale)
+          else
+            return locale.name, locale
+          end
+        end
       end
 
       # @return [String] the name of the locale. It used IETF language
