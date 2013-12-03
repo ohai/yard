@@ -50,6 +50,10 @@ module YARD
         types.first
       end
 
+      # Return the tag text.
+      #
+      # @param [String, I18n::Locale] locale (I18n::Locale.default)
+      #   the locale of the documentation string.
       # @return [String] the tag text associated with the tag
       # @return [nil] if no tag text is supplied
       def text(locale = I18n::Locale.default)
