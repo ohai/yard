@@ -377,9 +377,9 @@ module YARD
           @docstring.resolve_reference
           return @docstring
         end
-
+        
         locale_name, locale = I18n::Locale.normalize(locale)
-        @docstrings[locale_name] ||= translate_docstring(locale)
+        @docstrings[locale_name] ||= @docstring.translated(locale, self)
       end
 
       # Attaches a docstring to a code object by parsing the comments attached to the statement
@@ -562,17 +562,6 @@ module YARD
         last = source.split(/\r?\n/).last
         indent = last ? last[/^([ \t]*)/, 1].length : 0
         source.gsub(/^[ \t]{#{indent}}/, '')
-      end
-
-      def translate_docstring(locale)
-        @docstring.resolve_reference
-        return @docstring if locale.nil?
-
-        text = I18n::Text.new(@docstring)
-        localized_text = text.translate(locale)
-        docstring = Docstring.new(localized_text, self)
-        docstring.add_tag(*@docstring.tags)
-        docstring
       end
     end
   end

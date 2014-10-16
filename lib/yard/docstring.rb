@@ -331,6 +331,16 @@ module YARD
         self.all = [reference.docstring.all, @all].join("\n")
       end
     end
+    
+    def translated(locale, object = nil)
+      resolve_reference
+      return self if locale.nil?
+
+      localized_text = I18n::Text.new(self).translate(locale)
+      new_docstring = Docstring.new(localized_text, object)
+      new_docstring.add_tag(*tags)
+      new_docstring
+    end
 
     private
 
