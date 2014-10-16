@@ -1,18 +1,24 @@
 module YARD
   module Tags
     class OverloadTag < Tag
-      attr_reader :signature, :parameters, :docstring
+      attr_reader :signature, :parameters
 
       def initialize(tag_name, text)
         super(tag_name, nil)
         parse_tag(text)
         parse_signature
+        @docstrings = {}
       end
 
       def tag(name) docstring.tag(name) end
       def tags(name = nil) docstring.tags(name) end
       def has_tag?(name) docstring.has_tag?(name) end
 
+      def docstring(locale = I18n::Locale.default)
+        locale_name, locale = I18n::Locale.normalize(locale)
+        @docstrings[locale_name] ||= @docstring.translated(locale, nil)
+      end
+      
       def object=(value)
         super(value)
         docstring.object = value
